@@ -36,3 +36,9 @@ All files were downscaled (max ~970 px) and trimmed to a uniform border. Other e
 | pe-zebra-cradle.webp | Zebra TC5x single-slot cradle (CRD-TC51-1SCU-01) | https://www.zebra.com/content/dam/zebra_dam/en/guide/configuration-and-accessories/tc5x-guide-configuration-and-accessories-en-us.pdf | **Closest match:** previous-generation TC5x cradle; extracted from the PDF, background made transparent |
 | pe-vehicle-mount.webp | Brodit 712306 active holder for Zebra TC58 | https://www.brodit.co.uk/brodit/holders/zebra/tc58/active-holder-with-cigplug-for-zebra-tc58/6669 | Image from brodit.com (three views) |
 | pe-apc-ups.webp | APC Back-UPS Pro 1500 (BR1500MS2) | https://www.se.com/us/en/product/BR1500MS2/ | Schneider Electric |
+| hw-hp-z4-g5.webp | HP Z4 G5 Workstation (tower) | https://www.hp.com/us-en/shop/pdp/hp-z4-g5-workstation-customizable-57k34av-mb | Extracted from HP's Z4 G5 data sheet PDF (https://h20195.www2.hp.com/v2/GetPDF.aspx/c08479384); source is only 800x680 |
+| hw-thinkstation-p3.webp | Lenovo ThinkStation P3 Tower | https://psref.lenovo.com/Product/ThinkStation/ThinkStation_P3_Tower | Lenovo PSREF |
+| pe-cintiq-pro-27.webp | Wacom Cintiq Pro 27 | https://community.wacom.com/en-us/shop/wacom-cintiq-pro-27-pen-display/ | Wacom's own community shop (the estore blocks scripted access); source is 700 px, white background; shown without the stand |
+| pe-elgato-4k-pro.webp | Elgato Game Capture 4K Pro (10GBK9901) | https://www.elgato.com/us/en/p/game-capture-4k-pro | Elgato CDN (res.cloudinary.com/elgato-pwa); product area in the source is ~710 px |
+| hw-synology-rs2423.webp | Synology RackStation RS2423RP+ | https://www.synology.com/en-global/products/RS2423+ | Synology product photo API (getPhoto?product=RS2423RP+); white background |
+| pe-u3224kb.webp | Dell UltraSharp 32 6K Monitor U3224KB | https://www.dell.com/en-us/shop/dell-ultrasharp-32-6k-monitor-u3224kb/apd/210-bhbz/monitors-monitor-accessories | |
