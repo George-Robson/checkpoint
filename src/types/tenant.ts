@@ -1,3 +1,5 @@
+import type { Acquisition } from './acquisition';
+
 export type TenantPlan = 'Essentials' | 'Professional' | 'Enterprise';
 
 export interface Tenant {
@@ -13,4 +15,6 @@ export interface Tenant {
   onboardedAt: string;
   /** Software every person at this client is licensed for (always included in onboarding). */
   baselineSoftwareIds: string[];
+  /** Pre-selected when ordering hardware; can be changed per order. */
+  hardwarePreference: Acquisition;
 }

@@ -1,3 +1,5 @@
+import type { Acquisition } from './acquisition';
+
 export type DeviceCategory = 'computer' | 'telephony' | 'server' | 'networking';
 
 export type DeviceType =
@@ -26,7 +28,11 @@ export interface Device {
   ipAddress: string | null;
   macAddress: string;
   location: string;
-  leaseStartDate: string;
-  leaseEndDate: string;
+  /** Leased (returned at the end of the term) or bought outright and owned by the client. */
+  acquisition: Acquisition;
+  /** Lease start for leased devices; purchase date for owned ones. */
+  termStartDate: string;
+  /** Lease end for leased devices; warranty end for owned ones. Either way, when it's due for refresh. */
+  termEndDate: string;
   lastSeen: string;
 }

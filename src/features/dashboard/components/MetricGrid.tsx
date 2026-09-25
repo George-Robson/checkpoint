@@ -43,7 +43,7 @@ export function MetricGrid({ metrics }: MetricGridProps) {
         detail={
           nextRefresh
             ? `Next: ${nextRefresh.device.name} in ${nextRefresh.daysRemaining} ${nextRefresh.daysRemaining === 1 ? 'day' : 'days'}`
-            : `No leases ending within ${REFRESH_WINDOW_DAYS} days`
+            : `None ending within ${REFRESH_WINDOW_DAYS} days`
         }
       />
       <MetricCard

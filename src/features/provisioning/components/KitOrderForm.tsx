@@ -5,22 +5,26 @@ import { Select } from '../../../components/ui/Select';
 import { Textarea } from '../../../components/ui/Textarea';
 import { HOME_DELIVERY } from '../../../constants/delivery';
 import { formatDate } from '../../../lib/date';
+import type { Acquisition } from '../../../types/acquisition';
 import type { Kit } from '../../../types/kit';
 import type { Order } from '../../../types/order';
 import { Link } from 'react-router-dom';
 import { paths } from '../../../app/paths';
 import { KitItemList } from '../../kits/components/KitItemList';
+import { AcquisitionPicker } from '../../orders/components/AcquisitionPicker';
 import { useKitOrderForm } from '../hooks/useKitOrderForm';
 
 interface KitOrderFormProps {
   kit: Kit & { ownerTenantId: string };
   /** Lets the drawer footer's submit button target this form. */
   formId: string;
+  acquisition: Acquisition;
+  onAcquisitionChange: (acquisition: Acquisition) => void;
   onPlaced: (order: Order) => void;
 }
 
-export function KitOrderForm({ kit, formId, onPlaced }: KitOrderFormProps) {
-  const { values, setField, errors, sites, earliestStartDate, submit } = useKitOrderForm(kit);
+export function KitOrderForm({ kit, formId, acquisition, onAcquisitionChange, onPlaced }: KitOrderFormProps) {
+  const { values, setField, errors, sites, earliestStartDate, submit } = useKitOrderForm(kit, acquisition);
   const isSiteKit = kit.assignmentTarget === 'site';
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -44,6 +48,8 @@ export function KitOrderForm({ kit, formId, onPlaced }: KitOrderFormProps) {
           <KitItemList lines={kit.lines} />
         </div>
       </section>
+
+      <AcquisitionPicker name="kit-order-acquisition" lines={kit.lines} value={acquisition} onChange={onAcquisitionChange} />
 
       <form id={formId} noValidate onSubmit={handleSubmit} className="space-y-5">
         <h3 className="text-sm font-medium text-slate-900">{isSiteKit ? 'Site details' : 'Recipient'}</h3>

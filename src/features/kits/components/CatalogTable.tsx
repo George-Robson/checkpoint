@@ -80,7 +80,10 @@ export function CatalogTable({ kits }: CatalogTableProps) {
                   Used in
                 </th>
                 <th scope="col" className={`${HEADER_CELL} text-right`}>
-                  Monthly price
+                  Lease
+                </th>
+                <th scope="col" className={`${HEADER_CELL} text-right`}>
+                  Buy outright
                 </th>
               </tr>
             </thead>
@@ -112,6 +115,10 @@ export function CatalogTable({ kits }: CatalogTableProps) {
                     </td>
                     <td className={cn(CELL, 'whitespace-nowrap text-right tabular-nums text-slate-900')}>
                       {formatCurrency(item.monthlyPrice)}
+                      <span className="text-slate-500">/mo</span>
+                    </td>
+                    <td className={cn(CELL, 'whitespace-nowrap text-right tabular-nums text-slate-900')}>
+                      {formatCurrency(item.purchasePrice)}
                     </td>
                   </tr>
                 );

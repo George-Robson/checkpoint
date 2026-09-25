@@ -33,7 +33,7 @@ export const ACCOUNT_ACTION_META: Record<AccountAction, AccountActionMeta> = {
     needsLineManager: true,
   },
   'remove-licences': {
-    label: 'Release Microsoft 365 licences after 30 days',
-    description: 'Keeps data recoverable during the retention window.',
+    label: 'Release software licences after 30 days',
+    description: 'Seats return to the client’s pools 30 days after the last day; data stays recoverable until then.',
   },
 };

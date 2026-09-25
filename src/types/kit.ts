@@ -9,7 +9,9 @@ export type KitIconKey =
   | 'chart'
   | 'scan'
   | 'stethoscope'
-  | 'truck';
+  | 'truck'
+  | 'palette'
+  | 'gamepad';
 
 /** A catalogue item and how many of it the kit includes. */
 export interface KitLine {

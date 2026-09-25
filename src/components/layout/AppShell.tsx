@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
+import { AccountStandingBanner } from '../../features/billing/components/AccountStandingBanner';
 import { Sidebar } from './Sidebar';
 import { TopBar } from './TopBar';
 
@@ -45,6 +46,7 @@ export function AppShell() {
         <TopBar onOpenNav={() => setMobileNavOpen(true)} />
         <main ref={mainRef} className="flex-1 overflow-y-auto">
           <div className="mx-auto w-full max-w-7xl px-4 py-6 lg:px-8">
+            <AccountStandingBanner />
             <Outlet />
           </div>
         </main>

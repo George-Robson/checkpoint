@@ -135,6 +135,7 @@ export function PoolDrawer({ row, people, onClose, onChanged }: PoolDrawerProps)
                   {holder.status === 'scheduled' && holder.startsOn && (
                     <Badge tone="indigo">Starts {formatDate(holder.startsOn)}</Badge>
                   )}
+                  {holder.endsOn && <Badge tone="amber">Ends {formatDate(holder.endsOn)}</Badge>}
                   <button
                     type="button"
                     onClick={() => remove(holder.person)}

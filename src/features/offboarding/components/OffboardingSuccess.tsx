@@ -27,6 +27,8 @@ export function OffboardingSuccess({ request, primarySite }: OffboardingSuccessP
         : `${wipeCount} ${wipeCount === 1 ? 'device' : 'devices'} will be wiped once access is revoked.`),
     request.returnMethod === 'courier' && `A courier collection is booked with ${request.employee} for ${lastDay}.`,
     request.returnMethod === 'drop-off' && `Returned devices are left at ${primarySite} for engineer collection.`,
+    request.licencesEndOn &&
+      `Their software licences are released on ${formatDate(request.licencesEndOn)}, returning the seats to the pool.`,
     request.lineManager &&
       request.accountActions.some((action) => action === 'convert-mailbox' || action === 'transfer-files') &&
       `${request.lineManager} receives the mailbox and files.`,

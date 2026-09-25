@@ -23,7 +23,7 @@ export function RefreshQueuePanel({ items, showTenant, className }: RefreshQueue
         <EmptyState
           icon={CalendarCheck}
           title="Nothing due"
-          description={`No leases end in the next ${REFRESH_WINDOW_DAYS} days.`}
+          description={`No leases or warranties end in the next ${REFRESH_WINDOW_DAYS} days.`}
         />
       ) : (
         <>

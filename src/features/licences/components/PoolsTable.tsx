@@ -6,8 +6,8 @@ import { cn } from '../../../lib/cn';
 import { formatCurrency } from '../../../lib/currency';
 import { formatDate } from '../../../lib/date';
 import { getTenantName } from '../../tenants/utils/tenantLookup';
-import { SOFTWARE_CATEGORY_META } from '../constants/softwareCategoryMeta';
 import type { PoolRow } from '../types/poolRow';
+import { SoftwareLogo } from './SoftwareLogo';
 
 const HEADER_CELL = 'whitespace-nowrap px-3 py-3 text-left text-xs font-medium text-slate-500 first:pl-4 last:pr-4';
 const CELL = 'px-3 py-3 first:pl-4 last:pr-4';
@@ -52,14 +52,11 @@ export function PoolsTable({ rows, showTenant, onManage }: PoolsTableProps) {
         </thead>
         <tbody className="divide-y divide-slate-100">
           {rows.map((row) => {
-            const CategoryIcon = SOFTWARE_CATEGORY_META[row.product.category].icon;
             return (
               <tr key={row.pool.id} className="hover:bg-slate-50">
                 <td className={CELL}>
                   <div className="flex items-center gap-3">
-                    <span className="flex size-8 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-slate-50 text-slate-500">
-                      <CategoryIcon aria-hidden="true" className="size-4" />
-                    </span>
+                    <SoftwareLogo product={row.product} size="md" />
                     <div className="min-w-0">
                       <p className="whitespace-nowrap font-medium text-slate-900">{row.product.name}</p>
                       <p className="whitespace-nowrap text-xs text-slate-500">

@@ -25,6 +25,7 @@ export function StorefrontPage() {
   const { kits } = useKits();
   const { orders } = useOrders();
   const scopedOrders = useTenantScoped(orders);
+  const storefrontOrders = scopedOrders.filter((order) => !order.onboardingId);
   const [selectedKit, setSelectedKit] = useState<ClientKit | null>(null);
   const [lastPlacedOrderId, setLastPlacedOrderId] = useState<string | null>(null);
 
@@ -85,7 +86,12 @@ export function StorefrontPage() {
         </Card>
       )}
 
-      <RecentOrdersTable orders={scopedOrders} showTenant={isGlobalView} highlightOrderId={lastPlacedOrderId} />
+      <RecentOrdersTable
+        orders={storefrontOrders}
+        onboardingOrderCount={scopedOrders.length - storefrontOrders.length}
+        showTenant={isGlobalView}
+        highlightOrderId={lastPlacedOrderId}
+      />
 
       {selectedKit && (
         <KitOrderDrawer

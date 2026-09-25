@@ -1,9 +1,13 @@
 import {
   Boxes,
+  FileChartColumn,
+  HeartPulse,
+  LifeBuoy,
   KeyRound,
   LayoutDashboard,
   MonitorSmartphone,
   PackagePlus,
+  ReceiptText,
   UserMinus,
   UserPlus,
   type LucideIcon,
@@ -39,6 +43,18 @@ export const navSections: NavSection[] = [
       { label: 'Offboarding', to: paths.offboarding, icon: UserMinus },
       { label: 'Software & licences', to: paths.software, icon: KeyRound },
     ],
+  },
+  {
+    label: 'Service',
+    items: [
+      { label: 'Support', to: paths.support, icon: LifeBuoy },
+      { label: 'Health & security', to: paths.health, icon: HeartPulse },
+      { label: 'Reports', to: paths.reports, icon: FileChartColumn },
+    ],
+  },
+  {
+    label: 'Billing',
+    items: [{ label: 'Invoices', to: paths.invoices, icon: ReceiptText }],
   },
   {
     label: 'Configuration',

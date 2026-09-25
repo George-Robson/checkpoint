@@ -16,6 +16,6 @@ export function compareDevices(a: Device, b: Device, key: DeviceSortKey): number
     case 'status':
       return DEVICE_STATUS_ORDER.indexOf(a.status) - DEVICE_STATUS_ORDER.indexOf(b.status);
     case 'leaseEnd':
-      return a.leaseEndDate.localeCompare(b.leaseEndDate);
+      return a.termEndDate.localeCompare(b.termEndDate);
   }
 }

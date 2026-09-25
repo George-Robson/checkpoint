@@ -18,6 +18,8 @@ export interface LicenceAssignment {
   status: LicenceAssignmentStatus;
   /** Start date for scheduled assignments. */
   startsOn: string | null;
+  /** Set when the holder is offboarded: the seat returns to the pool on this date. */
+  endsOn: string | null;
   assignedAt: string;
   assignedBy: string;
 }

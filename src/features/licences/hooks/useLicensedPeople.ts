@@ -18,7 +18,7 @@ export function useLicensedPeople(): LicensedPerson[] {
       const key = `${tenantId}:${name}`;
       let person = people.get(key);
       if (!person) {
-        person = { key, name, tenantId, assignments: [], deviceCount: 0, startsOn: null };
+        person = { key, name, tenantId, assignments: [], deviceCount: 0, startsOn: null, endsOn: null };
         people.set(key, person);
       }
       return person;
@@ -30,6 +30,7 @@ export function useLicensedPeople(): LicensedPerson[] {
     }
 
     for (const person of people.values()) {
+      person.endsOn = person.assignments.map((assignment) => assignment.endsOn ?? '').filter(Boolean).sort()[0] || null;
       const scheduled = person.assignments.filter((assignment) => assignment.status === 'scheduled');
       if (scheduled.length > 0 && scheduled.length === person.assignments.length) {
         person.startsOn = scheduled.map((assignment) => assignment.startsOn ?? '').sort()[0] || null;

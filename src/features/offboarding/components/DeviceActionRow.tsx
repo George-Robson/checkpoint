@@ -1,7 +1,7 @@
 import { Select } from '../../../components/ui/Select';
 import { DEVICE_TYPE_META } from '../../../constants/deviceType';
 import { getNow } from '../../../lib/date';
-import { daysUntilLeaseEnd } from '../../../lib/lease';
+import { daysUntilTermEnd } from '../../../lib/deviceTerm';
 import type { Device } from '../../../types/device';
 import type { DeviceOffboardAction } from '../../../types/offboarding';
 import { DEVICE_ACTION_META, DEVICE_ACTION_ORDER } from '../constants/deviceActionMeta';
@@ -12,15 +12,16 @@ interface DeviceActionRowProps {
   onChange: (action: DeviceOffboardAction) => void;
 }
 
-function describeLease(daysRemaining: number): string {
-  if (daysRemaining < 0) return 'Lease ended';
-  if (daysRemaining < 60) return `Lease ends in ${daysRemaining}d`;
-  return `Lease ends in ${Math.round(daysRemaining / 30)} months`;
+function describeTerm(device: Device, daysRemaining: number): string {
+  const term = device.acquisition === 'purchase' ? 'Owned · warranty' : 'Lease';
+  if (daysRemaining < 0) return `${term} ended`;
+  if (daysRemaining < 60) return `${term} ends in ${daysRemaining}d`;
+  return `${term} ends in ${Math.round(daysRemaining / 30)} months`;
 }
 
 export function DeviceActionRow({ device, action, onChange }: DeviceActionRowProps) {
   const { icon: Icon } = DEVICE_TYPE_META[device.type];
-  const daysRemaining = daysUntilLeaseEnd(device, getNow());
+  const daysRemaining = daysUntilTermEnd(device, getNow());
 
   return (
     <li className="flex items-center gap-3 px-3 py-3">
@@ -30,7 +31,7 @@ export function DeviceActionRow({ device, action, onChange }: DeviceActionRowPro
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-medium text-slate-900">{device.name}</p>
         <p className="truncate text-xs text-slate-500">
-          {device.model} · {describeLease(daysRemaining)}
+          {device.model} · {describeTerm(device, daysRemaining)}
         </p>
       </div>
       <div className="w-40 shrink-0">

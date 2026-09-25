@@ -1,3 +1,5 @@
+import type { Acquisition } from '../../../types/acquisition';
+
 export type WizardStep = 'person' | 'hardware' | 'software' | 'review';
 
 /** Chosen in the hardware step when the new hire needs no kit. */
@@ -11,6 +13,8 @@ export interface OnboardingDraft {
   /** '' until chosen; NO_KIT for none; otherwise a client kit id. */
   kitId: string;
   shipTo: string;
+  /** Lease the kit or buy it outright; starts at the client's preference. */
+  acquisition: Acquisition;
   /** Extra software beyond the client's baseline (baseline is always included). */
   softwareIds: string[];
 }

@@ -1,12 +1,15 @@
 export type SoftwareCategory =
   | 'productivity'
-  | 'security'
+  | 'ai'
+  | 'design'
   | 'development'
-  | 'sales'
+  | 'collaboration'
   | 'communications'
+  | 'sales'
+  | 'security'
   | 'line-of-business';
 
-/** A licensable software product or managed profile, billed per seat per month. */
+/** An individually licensable software product, billed per seat per month. */
 export interface SoftwareProduct {
   id: string;
   name: string;
@@ -14,4 +17,9 @@ export interface SoftwareProduct {
   detail: string;
   category: SoftwareCategory;
   monthlyPricePerSeat: number;
+  /**
+   * Logo: a Simple Icons slug (e.g. 'jetbrains'), or a path under /software-logos for brands that
+   * Simple Icons doesn't carry. Absent = monogram fallback.
+   */
+  logo?: string;
 }

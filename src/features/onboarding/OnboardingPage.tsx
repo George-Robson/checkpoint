@@ -9,6 +9,7 @@ import { EmptyState } from '../../components/ui/EmptyState';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { formatDate } from '../../lib/date';
 import { useKits } from '../kits/hooks/useKits';
+import { useOrders } from '../orders/hooks/useOrders';
 import { useTenant } from '../tenants/hooks/useTenant';
 import { useTenantScoped } from '../tenants/hooks/useTenantScoped';
 import { OnboardingTable } from './components/OnboardingTable';
@@ -23,6 +24,8 @@ export function OnboardingPage() {
   const scoped = useTenantScoped(onboardings);
   const { kits } = useKits();
   const kitById = useMemo(() => new Map(kits.map((kit) => [kit.id, kit])), [kits]);
+  const { orders } = useOrders();
+  const orderById = useMemo(() => new Map(orders.map((order) => [order.id, order])), [orders]);
 
   const upcoming = scoped.filter((onboarding) => onboarding.status !== 'completed');
   const recent = scoped.filter((onboarding) => onboarding.status === 'completed');
@@ -60,6 +63,7 @@ export function OnboardingPage() {
         <OnboardingTable
           onboardings={upcoming}
           kitById={kitById}
+          orderById={orderById}
           showTenant={isGlobalView}
           highlightId={created?.createdId ?? null}
           empty={
@@ -77,6 +81,7 @@ export function OnboardingPage() {
         <OnboardingTable
           onboardings={recent}
           kitById={kitById}
+          orderById={orderById}
           showTenant={isGlobalView}
           highlightId={null}
           empty={<EmptyState icon={UserPlus} title="Nobody has started recently" />}

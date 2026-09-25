@@ -20,22 +20,32 @@ export function OnboardingsProvider({ children }: OnboardingsProviderProps) {
   const [onboardings, setOnboardings] = useState<Onboarding[]>(() =>
     [...seedOnboardings].sort((a, b) => b.createdAt.localeCompare(a.createdAt)),
   );
+  // Mirrors state synchronously so several updates in one event build on each other.
+  const onboardingsRef = useRef(onboardings);
   const nextReferenceRef = useRef(
     Math.max(...seedOnboardings.map((onboarding) => Number(onboarding.reference.slice(REFERENCE_PREFIX.length)))) + 1,
   );
 
+  const commit = useCallback((next: Onboarding[]) => {
+    onboardingsRef.current = next;
+    setOnboardings(next);
+  }, []);
+
   const startOnboarding = useCallback(
     (input: StartOnboardingInput): StartOnboardingResult => {
       const referenceNo = nextReferenceRef.current++;
+      const id = `onb-${referenceNo}`;
 
       const order = input.kit
         ? placeOrder({
             kit: input.kit,
             tenantId: input.tenantId,
+            acquisition: input.acquisition,
             assignee: input.person,
             requestedBy: input.requestedBy,
             startDate: input.startDate,
             shipTo: input.shipTo,
+            onboardingId: id,
           })
         : null;
 
@@ -50,7 +60,7 @@ export function OnboardingsProvider({ children }: OnboardingsProviderProps) {
       });
 
       const onboarding: Onboarding = {
-        id: `onb-${referenceNo}`,
+        id,
         reference: `${REFERENCE_PREFIX}${referenceNo}`,
         tenantId: input.tenantId,
         person: input.person,
@@ -65,15 +75,36 @@ export function OnboardingsProvider({ children }: OnboardingsProviderProps) {
         createdAt: getNow().toISOString(),
       };
 
-      setOnboardings((previous) => [onboarding, ...previous]);
+      commit([onboarding, ...onboardingsRef.current]);
       return { onboarding, order, licences };
     },
-    [placeOrder, changeLicences],
+    [placeOrder, changeLicences, commit],
+  );
+
+  const advanceTo = useCallback(
+    (today: string, approvedOrderIds: Set<string>) => {
+      const started: Onboarding[] = [];
+      const next = onboardingsRef.current.map((onboarding) => {
+        if (onboarding.status === 'completed') return onboarding;
+        if (onboarding.startDate <= today) {
+          const completed = { ...onboarding, status: 'completed' as const };
+          started.push(completed);
+          return completed;
+        }
+        if (onboarding.status === 'scheduled' && onboarding.orderId && approvedOrderIds.has(onboarding.orderId)) {
+          return { ...onboarding, status: 'in-progress' as const };
+        }
+        return onboarding;
+      });
+      if (next.some((onboarding, index) => onboarding !== onboardingsRef.current[index])) commit(next);
+      return started;
+    },
+    [commit],
   );
 
   const value = useMemo<OnboardingsContextValue>(
-    () => ({ onboardings, startOnboarding }),
-    [onboardings, startOnboarding],
+    () => ({ onboardings, startOnboarding, advanceTo }),
+    [onboardings, startOnboarding, advanceTo],
   );
 
   return <OnboardingsContext value={value}>{children}</OnboardingsContext>;

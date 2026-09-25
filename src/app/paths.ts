@@ -6,6 +6,10 @@ export const paths = {
   storefront: '/storefront',
   offboarding: '/offboarding',
   software: '/software',
+  invoices: '/invoices',
+  support: '/support',
+  health: '/health',
+  reports: '/reports',
   kits: '/kits',
   newKit: '/kits/new',
 } as const;

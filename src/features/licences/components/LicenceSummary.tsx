@@ -15,9 +15,10 @@ export function LicenceSummary({ rows, people }: LicenceSummaryProps) {
   const spend = rows.reduce((sum, row) => sum + row.monthlyCost, 0);
   const unused = rows.reduce((sum, row) => sum + row.unusedCost, 0);
   const licensedPeople = people.filter((person) => person.assignments.length > 0).length;
+  const ending = rows.reduce((sum, row) => sum + row.holders.filter((holder) => holder.endsOn).length, 0);
 
   const stats = [
-    { label: 'Seats in use', value: `${used} / ${seats}`, detail: `${seats - used} unassigned` },
+    { label: 'Seats in use', value: `${used} / ${seats}`, detail: `${seats - used} unassigned${ending ? ` · ${ending} freeing up from leavers` : ''}` },
     { label: 'Licensed people', value: `${licensedPeople}`, detail: `${people.length - licensedPeople} with devices only` },
     { label: 'Monthly software spend', value: formatCurrency(spend), detail: `${rows.length} seat pools` },
     {

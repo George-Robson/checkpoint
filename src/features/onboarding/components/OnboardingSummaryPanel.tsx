@@ -11,7 +11,8 @@ interface OnboardingSummaryPanelProps {
 
 /** Running totals beside the wizard so cost is visible while choosing. */
 export function OnboardingSummaryPanel({ wizard }: OnboardingSummaryPanelProps) {
-  const { draft, tenant, selectedKit, softwareIds, seatsToBuy, hardwareMonthly, softwareMonthly } = wizard;
+  const { draft, tenant, selectedKit, softwareIds, seatsToBuy, hardwareCost, softwareMonthly } = wizard;
+  const buying = selectedKit !== null && draft.acquisition === 'purchase';
 
   const rows = [
     { label: 'New hire', value: draft.person.trim() || '—' },
@@ -37,8 +38,8 @@ export function OnboardingSummaryPanel({ wizard }: OnboardingSummaryPanelProps) 
       </dl>
       <dl className="space-y-2 border-t border-slate-100 px-4 py-4 text-sm">
         <div className="flex justify-between gap-4">
-          <dt className="text-slate-500">Hardware lease</dt>
-          <dd className="tabular-nums text-slate-900">{formatCurrency(hardwareMonthly)}</dd>
+          <dt className="text-slate-500">{buying ? 'Device management' : 'Hardware lease'}</dt>
+          <dd className="tabular-nums text-slate-900">{formatCurrency(hardwareCost.monthly)}</dd>
         </div>
         <div className="flex justify-between gap-4">
           <dt className="text-slate-500">Software licences</dt>
@@ -47,10 +48,19 @@ export function OnboardingSummaryPanel({ wizard }: OnboardingSummaryPanelProps) 
         <div className="flex items-baseline justify-between gap-4 border-t border-slate-100 pt-3">
           <dt className="font-medium text-slate-900">Total</dt>
           <dd>
-            <span className="text-lg font-semibold text-slate-900">{formatCurrency(hardwareMonthly + softwareMonthly)}</span>
+            <span className="text-lg font-semibold text-slate-900">{formatCurrency(hardwareCost.monthly + softwareMonthly)}</span>
             <span className="text-slate-500"> / month</span>
           </dd>
         </div>
+        {buying && (
+          <div className="flex items-baseline justify-between gap-4">
+            <dt className="text-slate-500">Hardware purchase</dt>
+            <dd>
+              <span className="font-medium tabular-nums text-slate-900">{formatCurrency(hardwareCost.upfront)}</span>
+              <span className="text-slate-500"> one-off</span>
+            </dd>
+          </div>
+        )}
       </dl>
       {seatsToBuy.length > 0 && (
         <p className="border-t border-slate-100 px-4 py-3 text-xs text-amber-700">

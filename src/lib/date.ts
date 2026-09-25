@@ -30,9 +30,17 @@ const longMonthFormatter = new Intl.DateTimeFormat('en-GB', {
   timeZone: 'UTC',
 });
 
-/** The app's clock. Pinned to the mock dataset so every calculation is reproducible. */
+/** Days the demo clock has been moved forward from MOCK_NOW (see the top-bar demo clock). */
+let clockOffsetDays = 0;
+
+/** The app's clock: the mock dataset's "now", plus however far the demo clock has been advanced. */
 export function getNow(): Date {
-  return new Date(MOCK_NOW);
+  return new Date(new Date(MOCK_NOW).getTime() + clockOffsetDays * DAY_MS);
+}
+
+/** Only the ClockProvider should call this, so the app re-renders against the new date. */
+export function setClockOffsetDays(days: number): void {
+  clockOffsetDays = days;
 }
 
 /** Parses a date-only ISO string (YYYY-MM-DD) as UTC midnight. */

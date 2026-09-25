@@ -3,6 +3,7 @@ import { cn } from '../../../lib/cn';
 import { formatCurrency } from '../../../lib/currency';
 import { SOFTWARE_CATEGORY_META } from '../constants/softwareCategoryMeta';
 import type { PoolRow } from '../types/poolRow';
+import { SoftwareLogo } from './SoftwareLogo';
 
 const HEADER_CELL = 'whitespace-nowrap px-3 py-3 text-left text-xs font-medium text-slate-500 first:pl-4 last:pr-4';
 const CELL = 'px-3 py-3 first:pl-4 last:pr-4';
@@ -44,10 +45,15 @@ export function SoftwareCatalogTable({ rows }: SoftwareCatalogTableProps) {
             return (
               <tr key={product.id} className="hover:bg-slate-50">
                 <td className={CELL}>
-                  <p className="font-medium text-slate-900">{product.name}</p>
-                  <p className="text-xs text-slate-500">
-                    {product.vendor} · {product.detail}
-                  </p>
+                  <div className="flex items-center gap-3">
+                    <SoftwareLogo product={product} size="md" />
+                    <div className="min-w-0">
+                      <p className="font-medium text-slate-900">{product.name}</p>
+                      <p className="text-xs text-slate-500">
+                        {product.vendor} · {product.detail}
+                      </p>
+                    </div>
+                  </div>
                 </td>
                 <td className={cn(CELL, 'whitespace-nowrap text-slate-700')}>
                   <span className="inline-flex items-center gap-2">

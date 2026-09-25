@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { HOME_DELIVERY } from '../../../constants/delivery';
 import { addDays, formatDate, getNow, toIsoDate } from '../../../lib/date';
+import type { Acquisition } from '../../../types/acquisition';
 import type { Kit } from '../../../types/kit';
 import type { Order } from '../../../types/order';
 import { useOrders } from '../../orders/hooks/useOrders';
@@ -24,7 +25,7 @@ function validate(values: KitOrderFormValues, kit: Kit, earliestStartDate: strin
 }
 
 /** Order form for a client kit; the order is placed for the tenant that owns the kit. */
-export function useKitOrderForm(kit: Kit & { ownerTenantId: string }) {
+export function useKitOrderForm(kit: Kit & { ownerTenantId: string }, acquisition: Acquisition) {
   const { placeOrder } = useOrders();
   const { currentUser } = useSession();
   const sites = useMemo(() => getTenantSites(kit.ownerTenantId), [kit.ownerTenantId]);
@@ -55,6 +56,7 @@ export function useKitOrderForm(kit: Kit & { ownerTenantId: string }) {
     return placeOrder({
       kit,
       tenantId: kit.ownerTenantId,
+      acquisition,
       assignee,
       requestedBy: currentUser.name,
       startDate: values.startDate,

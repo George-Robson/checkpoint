@@ -4,7 +4,7 @@ import { TenantAvatar } from '../../tenants/components/TenantAvatar';
 import { getTenant, getTenantName } from '../../tenants/utils/tenantLookup';
 import { DeviceStatusBadge } from './DeviceStatusBadge';
 import { DeviceTypeCell } from './DeviceTypeCell';
-import { LeaseCell } from './LeaseCell';
+import { TermCell } from './TermCell';
 
 interface DeviceTableRowProps {
   device: Device;
@@ -55,7 +55,7 @@ export function DeviceTableRow({ device, showTenant }: DeviceTableRowProps) {
         <p className="text-slate-500">{device.macAddress}</p>
       </td>
       <td className="px-3 py-3 first:pl-4 last:pr-4">
-        <LeaseCell device={device} />
+        <TermCell device={device} />
       </td>
     </tr>
   );

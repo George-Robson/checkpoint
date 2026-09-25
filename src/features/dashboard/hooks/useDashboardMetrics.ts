@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { DEVICE_STATUS_ORDER } from '../../../constants/deviceStatus';
 import { alerts } from '../../../data/mockData';
 import { getNow } from '../../../lib/date';
-import { daysUntilLeaseEnd, isDueForRefresh } from '../../../lib/lease';
+import { daysUntilTermEnd, isDueForRefresh } from '../../../lib/deviceTerm';
 import type { DeviceStatus } from '../../../types/device';
 import { useOrders } from '../../orders/hooks/useOrders';
 import { useDevices } from '../../devices/hooks/useDevices';
@@ -30,7 +30,7 @@ export function useDashboardMetrics(): DashboardMetrics {
 
     const refreshQueue = scopedDevices
       .filter((device) => isDueForRefresh(device, now))
-      .map((device) => ({ device, daysRemaining: daysUntilLeaseEnd(device, now) }))
+      .map((device) => ({ device, daysRemaining: daysUntilTermEnd(device, now) }))
       .sort((a, b) => a.daysRemaining - b.daysRemaining);
 
     const openOrders = scopedOrders.filter((order) => order.status !== 'delivered');

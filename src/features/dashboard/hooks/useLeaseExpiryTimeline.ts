@@ -1,14 +1,14 @@
 import { useMemo } from 'react';
 import { REFRESH_WINDOW_DAYS } from '../../../data/mockData';
 import { addDays, formatMonth, formatMonthLong, getNow } from '../../../lib/date';
-import { daysUntilLeaseEnd } from '../../../lib/lease';
+import { daysUntilTermEnd } from '../../../lib/deviceTerm';
 import { useDevices } from '../../devices/hooks/useDevices';
 import { useTenantScoped } from '../../tenants/hooks/useTenantScoped';
 import type { LeaseExpiryBucket } from '../types/leaseExpiryBucket';
 
 const MONTHS_AHEAD = 12;
 
-/** Upcoming lease ends grouped by calendar month, starting with the current month. */
+/** Upcoming lease and warranty ends grouped by calendar month, starting with the current month. */
 export function useLeaseExpiryTimeline(): LeaseExpiryBucket[] {
   const { devices } = useDevices();
   const scopedDevices = useTenantScoped(devices);
@@ -31,8 +31,8 @@ export function useLeaseExpiryTimeline(): LeaseExpiryBucket[] {
 
     const bucketByKey = new Map(buckets.map((bucket) => [bucket.key, bucket]));
     for (const device of scopedDevices) {
-      if (daysUntilLeaseEnd(device, now) < 0) continue;
-      const bucket = bucketByKey.get(device.leaseEndDate.slice(0, 7));
+      if (daysUntilTermEnd(device, now) < 0) continue;
+      const bucket = bucketByKey.get(device.termEndDate.slice(0, 7));
       if (bucket) {
         bucket.devices.push(device);
         bucket.count += 1;

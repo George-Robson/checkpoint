@@ -2,6 +2,9 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App.tsx';
+import { InvoicesProvider } from './features/billing/context/InvoicesProvider';
+import { ClockProvider } from './features/clock/context/ClockProvider';
+import { TicketsProvider } from './features/helpdesk/context/TicketsProvider';
 import { DevicesProvider } from './features/devices/context/DevicesProvider';
 import { KitsProvider } from './features/kits/context/KitsProvider';
 import { LicencesProvider } from './features/licences/context/LicencesProvider';
@@ -23,7 +26,13 @@ createRoot(document.getElementById('root')!).render(
                 <LicencesProvider>
                   <OnboardingsProvider>
                     <OffboardingProvider>
-                      <App />
+                      <InvoicesProvider>
+                        <TicketsProvider>
+                          <ClockProvider>
+                            <App />
+                          </ClockProvider>
+                        </TicketsProvider>
+                      </InvoicesProvider>
                     </OffboardingProvider>
                   </OnboardingsProvider>
                 </LicencesProvider>

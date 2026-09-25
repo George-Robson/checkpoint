@@ -1,5 +1,9 @@
 import { Route, Routes } from 'react-router-dom';
 import { AppShell } from '../components/layout/AppShell';
+import { InvoicesPage } from '../features/billing/InvoicesPage';
+import { HealthPage } from '../features/health/HealthPage';
+import { SupportPage } from '../features/helpdesk/SupportPage';
+import { ReportsPage } from '../features/reports/ReportsPage';
 import { DashboardPage } from '../features/dashboard/DashboardPage';
 import { FleetPage } from '../features/fleet/FleetPage';
 import { KitBuilderPage } from '../features/kits/KitBuilderPage';
@@ -23,6 +27,10 @@ export function AppRoutes() {
         <Route path={paths.storefront} element={<StorefrontPage />} />
         <Route path={paths.software} element={<LicencesPage />} />
         <Route path={paths.offboarding} element={<OffboardingPage />} />
+        <Route path={paths.invoices} element={<InvoicesPage />} />
+        <Route path={paths.support} element={<SupportPage />} />
+        <Route path={paths.health} element={<HealthPage />} />
+        <Route path={paths.reports} element={<ReportsPage />} />
         <Route path={paths.kits} element={<KitsPage />} />
         <Route path={paths.newKit} element={<KitBuilderPage />} />
         <Route path={`${paths.kits}/:kitId`} element={<KitBuilderPage />} />

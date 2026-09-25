@@ -4,7 +4,7 @@ import { cn } from '../../../lib/cn';
 import { formatCurrency } from '../../../lib/currency';
 import type { Kit } from '../../../types/kit';
 import type { KitDraft } from '../types/kitDraft';
-import { kitMonthlyPrice, resolveKitLines } from '../utils/kitPricing';
+import { kitMonthlyPrice, kitPurchasePrice, resolveKitLines } from '../utils/kitPricing';
 import { specSummary } from '../utils/specSummary';
 import { CatalogImage } from './CatalogImage';
 import { KitIconBadge } from './KitIconBadge';
@@ -54,6 +54,7 @@ export function KitCard({ kit, onSelect }: KitCardProps) {
             <p>
               <span className="text-base font-medium text-slate-900">{formatCurrency(kitMonthlyPrice(kit.lines))}</span>
               <span className="text-sm text-slate-500"> / month</span>
+              <span className="text-sm tabular-nums text-slate-500"> · or {formatCurrency(kitPurchasePrice(kit.lines))} to buy</span>
             </p>
             <p className="mt-0.5 flex items-center gap-1 text-xs text-slate-500">
               <Truck aria-hidden="true" className="size-3.5" />

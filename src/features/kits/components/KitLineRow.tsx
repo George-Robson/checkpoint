@@ -24,7 +24,9 @@ export function KitLineRow({ item, quantity, onQuantityChange, onRemove }: KitLi
         >
           {specSummary(item)}
         </p>
-        <p className="text-xs text-slate-400">{formatCurrency(item.monthlyPrice)}/mo each</p>
+        <p className="text-xs text-slate-400">
+          {formatCurrency(item.monthlyPrice)}/mo each · {formatCurrency(item.purchasePrice)} to buy
+        </p>
       </div>
       <QuantityStepper value={quantity} onChange={onQuantityChange} label={item.name} />
       <span className="w-14 shrink-0 text-right text-sm tabular-nums text-slate-900">

@@ -9,8 +9,9 @@ export const DEVICE_ACTION_ORDER: DeviceOffboardAction[] = ['wipe-return', 'wipe
 
 export const DEVICE_ACTION_META: Record<DeviceOffboardAction, DeviceActionMeta> = {
   'wipe-return': {
-    label: 'Wipe & return',
-    description: 'Remote wipe, then collected and returned to Checkpoint stock.',
+    label: 'Wipe & collect',
+    description:
+      'Remote wipe, then collected by Checkpoint. Leased devices go back to stock; owned devices are securely recycled with a disposal certificate.',
   },
   'wipe-reassign': {
     label: 'Wipe & reassign',

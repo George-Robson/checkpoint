@@ -10,7 +10,8 @@ import { formatCurrency } from '../../../lib/currency';
 import { formatDate } from '../../../lib/date';
 import { CatalogImage } from '../../kits/components/CatalogImage';
 import { describeContents } from '../../kits/utils/describeContents';
-import { kitMonthlyPrice, resolveKitLines } from '../../kits/utils/kitPricing';
+import { kitMonthlyPrice, kitPurchasePrice, resolveKitLines } from '../../kits/utils/kitPricing';
+import { AcquisitionPicker } from '../../orders/components/AcquisitionPicker';
 import type { OnboardingWizard } from '../hooks/useOnboardingWizard';
 import { NO_KIT } from '../types/onboardingDraft';
 import { HardwareOption } from './HardwareOption';
@@ -58,6 +59,9 @@ export function HardwareStep({ wizard }: HardwareStepProps) {
                         {formatCurrency(kitMonthlyPrice(kit.lines))}
                       </span>
                       <span className="text-xs text-slate-500">/mo</span>
+                      <span className="block text-xs tabular-nums text-slate-500">
+                        or {formatCurrency(kitPurchasePrice(kit.lines))} to buy
+                      </span>
                     </>
                   }
                 />
@@ -87,6 +91,17 @@ export function HardwareStep({ wizard }: HardwareStepProps) {
             </p>
           )}
         </fieldset>
+
+        {selectedKit && (
+          <div className="border-t border-slate-100 pt-5">
+            <AcquisitionPicker
+              name="onboarding-acquisition"
+              lines={selectedKit.lines}
+              value={draft.acquisition}
+              onChange={(acquisition) => setField('acquisition', acquisition)}
+            />
+          </div>
+        )}
 
         {selectedKit && (
           <div className="grid gap-5 border-t border-slate-100 pt-5 sm:grid-cols-2">

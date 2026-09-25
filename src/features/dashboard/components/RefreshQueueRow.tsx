@@ -30,7 +30,10 @@ export function RefreshQueueRow({ item, showTenant }: RefreshQueueRowProps) {
       </div>
       <div className="shrink-0 text-right">
         <Badge tone={daysRemaining <= URGENT_DAYS ? 'amber' : 'slate'}>{daysRemaining}d left</Badge>
-        <p className="mt-0.5 text-xs text-slate-500">{formatDate(device.leaseEndDate)}</p>
+        <p className="mt-0.5 text-xs text-slate-500">
+          {device.acquisition === 'purchase' ? 'Warranty · ' : 'Lease · '}
+          {formatDate(device.termEndDate)}
+        </p>
       </div>
     </li>
   );

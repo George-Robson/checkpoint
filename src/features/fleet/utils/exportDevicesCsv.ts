@@ -1,10 +1,11 @@
 import { DEVICE_CATEGORY_META } from '../../../constants/deviceCategory';
 import { DEVICE_STATUS_META } from '../../../constants/deviceStatus';
-import { MOCK_NOW } from '../../../data/mockData';
 import { downloadCsv, toCsv } from '../../../lib/csv';
+import { getNow, toIsoDate } from '../../../lib/date';
 import type { Device } from '../../../types/device';
 import { getTenantName } from '../../tenants/utils/tenantLookup';
 import { DEVICE_TYPE_META } from '../../../constants/deviceType';
+import { ACQUISITION_META } from '../../orders/constants/acquisitionMeta';
 
 const HEADERS = [
   'Device',
@@ -17,8 +18,9 @@ const HEADERS = [
   'Status',
   'IP address',
   'MAC address',
-  'Lease start',
-  'Lease end',
+  'Ownership',
+  'Lease start / purchased',
+  'Lease / warranty end',
   'Last seen (UTC)',
 ];
 
@@ -35,10 +37,11 @@ export function exportDevicesCsv(devices: Device[], scopeCode: string): void {
     DEVICE_STATUS_META[device.status].label,
     device.ipAddress,
     device.macAddress,
-    device.leaseStartDate,
-    device.leaseEndDate,
+    ACQUISITION_META[device.acquisition].ownership,
+    device.termStartDate,
+    device.termEndDate,
     device.lastSeen,
   ]);
 
-  downloadCsv(`checkpoint-fleet-${scopeCode.toLowerCase()}-${MOCK_NOW.slice(0, 10)}.csv`, toCsv(HEADERS, rows));
+  downloadCsv(`checkpoint-fleet-${scopeCode.toLowerCase()}-${toIsoDate(getNow())}.csv`, toCsv(HEADERS, rows));
 }

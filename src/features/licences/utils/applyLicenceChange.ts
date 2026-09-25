@@ -42,6 +42,7 @@ export function applyLicenceChange(
       person,
       status: change.startsOn ? ('scheduled' as const) : ('active' as const),
       startsOn: change.startsOn,
+      endsOn: null,
       assignedAt: now.toISOString(),
       assignedBy: change.changedBy,
     })),

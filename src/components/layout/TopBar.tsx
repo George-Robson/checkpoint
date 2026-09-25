@@ -1,4 +1,5 @@
 import { Menu } from 'lucide-react';
+import { DemoClock } from '../../features/clock/components/DemoClock';
 import { TenantSwitcher } from '../../features/tenants/components/TenantSwitcher';
 import { AlertsButton } from './AlertsButton';
 import { GlobalSearchButton } from './GlobalSearchButton';
@@ -22,6 +23,7 @@ export function TopBar({ onOpenNav }: TopBarProps) {
       <TenantSwitcher />
 
       <div className="ml-auto flex items-center gap-2">
+        <DemoClock />
         <GlobalSearchButton />
         <AlertsButton />
       </div>

@@ -1,9 +1,11 @@
 import { useMemo, useState } from 'react';
 import { HOME_DELIVERY } from '../../../constants/delivery';
 import { addDays, formatDate, getNow, toIsoDate } from '../../../lib/date';
+import type { Acquisition } from '../../../types/acquisition';
 import { useKits } from '../../kits/hooks/useKits';
 import { isClientKit, type ClientKit } from '../../kits/utils/isClientKit';
-import { kitMonthlyPrice } from '../../kits/utils/kitPricing';
+import { kitCost, type KitCost } from '../../kits/utils/kitPricing';
+import { useLicences } from '../../licences/hooks/useLicences';
 import { useSeatAvailability } from '../../licences/hooks/useSeatAvailability';
 import { softwareMonthlyCost } from '../../licences/utils/softwareLookup';
 import { useSession } from '../../session/hooks/useSession';
@@ -21,6 +23,12 @@ const DEFAULT_START_IN_DAYS = 14;
 function defaultShipTo(tenantId: string): string {
   return tenantId ? (getTenantSites(tenantId)[0] ?? HOME_DELIVERY) : '';
 }
+
+function defaultAcquisition(tenantId: string): Acquisition {
+  return (tenantId && getTenant(tenantId)?.hardwarePreference) || 'lease';
+}
+
+const NO_HARDWARE_COST: KitCost = { upfront: 0, monthly: 0 };
 
 function validate(draft: OnboardingDraft, step: WizardStep, earliestStart: string): OnboardingDraftErrors {
   const errors: OnboardingDraftErrors = {};
@@ -54,6 +62,7 @@ export function useOnboardingWizard() {
       startDate: toIsoDate(addDays(getNow(), DEFAULT_START_IN_DAYS)),
       kitId: '',
       shipTo: defaultShipTo(tenantId),
+      acquisition: defaultAcquisition(tenantId),
       softwareIds: [],
     };
   });
@@ -61,7 +70,8 @@ export function useOnboardingWizard() {
   const [attempted, setAttempted] = useState<Set<WizardStep>>(new Set());
 
   const tenant = draft.tenantId ? getTenant(draft.tenantId) : null;
-  const baselineIds = useMemo(() => tenant?.baselineSoftwareIds ?? [], [tenant]);
+  const { baselines } = useLicences();
+  const baselineIds = useMemo(() => baselines[draft.tenantId] ?? [], [baselines, draft.tenantId]);
   const availability = useSeatAvailability(draft.tenantId || null);
 
   const tenantKits = useMemo(
@@ -86,19 +96,26 @@ export function useOnboardingWizard() {
       : null;
 
   const seatsToBuy = softwareIds.filter((id) => (availability.get(id)?.free ?? 0) === 0);
-  const hardwareMonthly = selectedKit ? kitMonthlyPrice(selectedKit.lines) : 0;
+  const hardwareCost = selectedKit ? kitCost(selectedKit.lines, draft.acquisition) : NO_HARDWARE_COST;
   const softwareMonthly = softwareMonthlyCost(softwareIds);
 
   const errors = attempted.has(step) ? validate(draft, step, earliestStart) : {};
   const stepIndex = WIZARD_STEPS.findIndex((candidate) => candidate.id === step);
 
-  function setField<K extends 'person' | 'jobTitle' | 'startDate' | 'shipTo'>(field: K, value: OnboardingDraft[K]) {
+  function setField<K extends 'person' | 'jobTitle' | 'startDate' | 'shipTo' | 'acquisition'>(field: K, value: OnboardingDraft[K]) {
     setDraft((previous) => ({ ...previous, [field]: value }));
   }
 
   /** A different client has different kits, sites and baseline, so the later steps reset. */
   function setTenant(tenantId: string) {
-    setDraft((previous) => ({ ...previous, tenantId, kitId: '', shipTo: defaultShipTo(tenantId), softwareIds: [] }));
+    setDraft((previous) => ({
+      ...previous,
+      tenantId,
+      kitId: '',
+      shipTo: defaultShipTo(tenantId),
+      acquisition: defaultAcquisition(tenantId),
+      softwareIds: [],
+    }));
   }
 
   /** Swaps the previous kit's recommendations for the new kit's, keeping anything picked by hand. */
@@ -116,11 +133,16 @@ export function useOnboardingWizard() {
   }
 
   function toggleSoftware(softwareId: string, included: boolean) {
+    toggleSoftwareMany([softwareId], included);
+  }
+
+  /** Adds or removes several licences at once (e.g. a bundle). The baseline always stays. */
+  function toggleSoftwareMany(softwareIds: string[], included: boolean) {
     setDraft((previous) => ({
       ...previous,
       softwareIds: included
-        ? [...previous.softwareIds, softwareId]
-        : previous.softwareIds.filter((id) => id !== softwareId),
+        ? [...new Set([...previous.softwareIds, ...softwareIds])]
+        : previous.softwareIds.filter((id) => !softwareIds.includes(id)),
     }));
   }
 
@@ -149,6 +171,7 @@ export function useOnboardingWizard() {
       startDate: draft.startDate,
       kit: selectedKit,
       shipTo: selectedKit ? draft.shipTo : '',
+      acquisition: draft.acquisition,
       softwareIds,
       requestedBy: currentUser.name,
     });
@@ -168,7 +191,7 @@ export function useOnboardingWizard() {
     seatsToBuy,
     kitDelivery,
     deliveryWarning,
-    hardwareMonthly,
+    hardwareCost,
     softwareMonthly,
     earliestStart,
     sites: draft.tenantId ? getTenantSites(draft.tenantId) : [],
@@ -176,6 +199,7 @@ export function useOnboardingWizard() {
     setTenant,
     selectKit,
     toggleSoftware,
+    toggleSoftwareMany,
     next,
     back,
     goTo,

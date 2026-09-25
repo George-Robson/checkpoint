@@ -5,7 +5,10 @@ import { formatDate, formatDateTime, formatRelativeTime } from '../../../lib/dat
 import type { Kit } from '../../../types/kit';
 import type { Order } from '../../../types/order';
 import { getTenantName } from '../../tenants/utils/tenantLookup';
-import { OrderStatusBadge } from './OrderStatusBadge';
+import { kitCost } from '../../kits/utils/kitPricing';
+import { OrderStatusBadge } from '../../orders/components/OrderStatusBadge';
+import { ACQUISITION_META } from '../../orders/constants/acquisitionMeta';
+import { describeKitCost } from '../../orders/utils/describeKitCost';
 
 interface RecentOrderRowProps {
   order: Order;
@@ -30,7 +33,13 @@ export function RecentOrderRow({ order, kit, showTenant, isNew }: RecentOrderRow
           {formatRelativeTime(order.createdAt)}
         </time>
       </td>
-      <td className={cn(CELL, 'whitespace-nowrap text-slate-700')}>{kit?.name ?? order.kitId}</td>
+      <td className={CELL}>
+        <p className="whitespace-nowrap text-slate-700">{kit?.name ?? order.kitId}</p>
+        <p className="whitespace-nowrap text-xs text-slate-500">
+          {ACQUISITION_META[order.acquisition].ownership}
+          {kit && ` · ${describeKitCost(kitCost(kit.lines, order.acquisition))}`}
+        </p>
+      </td>
       <td className={CELL}>
         <span className="inline-flex items-center gap-2 whitespace-nowrap text-slate-900">
           <AssigneeIcon aria-hidden="true" className="size-4 text-slate-400" />

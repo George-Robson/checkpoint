@@ -5,8 +5,11 @@ import { formatCurrency } from '../../../lib/currency';
 import { formatDate, formatRelativeDay } from '../../../lib/date';
 import { suggestWorkEmail } from '../../../lib/workEmail';
 import { CatalogImage } from '../../kits/components/CatalogImage';
-import { resolveKitLines } from '../../kits/utils/kitPricing';
+import { kitCost, resolveKitLines } from '../../kits/utils/kitPricing';
+import { ACQUISITION_META } from '../../orders/constants/acquisitionMeta';
+import { describeKitCost } from '../../orders/utils/describeKitCost';
 import { SeatNote } from '../../licences/components/SeatNote';
+import { SoftwareLogo } from '../../licences/components/SoftwareLogo';
 import { getSoftwareProduct } from '../../licences/utils/softwareLookup';
 import type { OnboardingWizard } from '../hooks/useOnboardingWizard';
 import { ReviewSection } from './ReviewSection';
@@ -55,6 +58,12 @@ export function ReviewStep({ wizard }: ReviewStepProps) {
               <p className="text-sm text-slate-900">
                 {selectedKit.name} <span className="text-slate-500">· deliver to {draft.shipTo}</span>
               </p>
+              <p className="text-sm text-slate-900">
+                {ACQUISITION_META[draft.acquisition].label}{' '}
+                <span className="tabular-nums text-slate-500">
+                  · {describeKitCost(kitCost(selectedKit.lines, draft.acquisition))}
+                </span>
+              </p>
               <ul className="flex flex-wrap gap-3">
                 {resolveKitLines(selectedKit.lines).map((line) => (
                   <li key={line.item.id} className="flex items-center gap-2 text-xs text-slate-700">
@@ -80,10 +89,13 @@ export function ReviewStep({ wizard }: ReviewStepProps) {
           <ul className="divide-y divide-slate-100 rounded-lg border border-slate-200">
             {products.map((product) => (
               <li key={product.id} className="flex items-center justify-between gap-4 px-3 py-2 text-sm">
-                <span className="min-w-0">
-                  <span className="block text-slate-900">{product.name}</span>
-                  <span className="block text-xs">
-                    <SeatNote product={product} availability={availability.get(product.id)} held={false} selected />
+                <span className="flex min-w-0 items-center gap-3">
+                  <SoftwareLogo product={product} size="sm" />
+                  <span className="min-w-0">
+                    <span className="block text-slate-900">{product.name}</span>
+                    <span className="block text-xs">
+                      <SeatNote product={product} availability={availability.get(product.id)} held={false} selected />
+                    </span>
                   </span>
                 </span>
                 <span className="shrink-0 tabular-nums text-slate-500">

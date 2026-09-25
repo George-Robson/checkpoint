@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom';
 import { paths } from '../../app/paths';
 import { buttonClasses } from '../../components/ui/buttonStyles';
 import { PageHeader } from '../../components/ui/PageHeader';
-import { MOCK_NOW } from '../../data/mockData';
-import { formatDateTime } from '../../lib/date';
+import { formatDateTime, getNow } from '../../lib/date';
 import { useTenant } from '../tenants/hooks/useTenant';
 import { FleetCompositionPanel } from './components/FleetCompositionPanel';
 import { LeaseExpiryPanel } from './components/LeaseExpiryPanel';
@@ -21,7 +20,7 @@ export function DashboardPage() {
     <div className="space-y-6">
       <PageHeader
         title="Overview"
-        description={`${selectedTenant?.name ?? 'All clients'} · Snapshot ${formatDateTime(MOCK_NOW)}`}
+        description={`${selectedTenant?.name ?? 'All clients'} · Snapshot ${formatDateTime(getNow().toISOString())}`}
         actions={
           <Link to={paths.storefront} className={buttonClasses('primary', 'md')}>
             <Plus aria-hidden="true" className="size-4" />

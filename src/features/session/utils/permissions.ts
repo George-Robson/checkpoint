@@ -15,6 +15,11 @@ export function canManageTemplates(user: SessionUser): boolean {
   return user.role === 'msp-admin';
 }
 
+/** Payments are reconciled by Checkpoint's accounts team, not by clients. */
+export function canRecordPayments(user: SessionUser): boolean {
+  return user.role === 'msp-admin';
+}
+
 /** Whether the user may view a kit at all (templates are visible to everyone). */
 export function canViewKit(user: SessionUser, kit: Pick<Kit, 'ownerTenantId'>): boolean {
   return user.role === 'msp-admin' || kit.ownerTenantId === null || kit.ownerTenantId === user.tenantId;

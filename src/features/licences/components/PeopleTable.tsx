@@ -8,11 +8,12 @@ import { formatDate } from '../../../lib/date';
 import { initialsFor } from '../../../lib/initials';
 import { getTenantName } from '../../tenants/utils/tenantLookup';
 import type { LicensedPerson } from '../types/licensedPerson';
-import { getSoftwareProduct, softwareMonthlyCost } from '../utils/softwareLookup';
+import { softwareMonthlyCost } from '../utils/softwareLookup';
+import { SoftwareLogoStack } from './SoftwareLogoStack';
 
 const HEADER_CELL = 'whitespace-nowrap px-3 py-3 text-left text-xs font-medium text-slate-500 first:pl-4 last:pr-4';
 const CELL = 'px-3 py-3 first:pl-4 last:pr-4';
-const VISIBLE_CHIPS = 3;
+const VISIBLE_LOGOS = 6;
 
 interface PeopleTableProps {
   people: LicensedPerson[];
@@ -52,7 +53,6 @@ export function PeopleTable({ people, showTenant, onManage }: PeopleTableProps) 
         <tbody className="divide-y divide-slate-100">
           {people.map((person) => {
             const softwareIds = person.assignments.map((assignment) => assignment.softwareId);
-            const names = softwareIds.flatMap((id) => getSoftwareProduct(id)?.name ?? []);
             return (
               <tr key={person.key} className="hover:bg-slate-50">
                 <td className={CELL}>
@@ -67,6 +67,7 @@ export function PeopleTable({ people, showTenant, onManage }: PeopleTableProps) 
                       <p className="flex items-center gap-2 whitespace-nowrap font-medium text-slate-900">
                         {person.name}
                         {person.startsOn && <Badge tone="indigo">Starts {formatDate(person.startsOn)}</Badge>}
+                        {person.endsOn && <Badge tone="amber">Leaving · licences end {formatDate(person.endsOn)}</Badge>}
                       </p>
                       <p className="whitespace-nowrap text-xs text-slate-500">
                         {person.deviceCount} {person.deviceCount === 1 ? 'device' : 'devices'}
@@ -76,20 +77,14 @@ export function PeopleTable({ people, showTenant, onManage }: PeopleTableProps) 
                 </td>
                 {showTenant && <td className={cn(CELL, 'whitespace-nowrap text-slate-700')}>{getTenantName(person.tenantId)}</td>}
                 <td className={CELL}>
-                  {names.length === 0 ? (
+                  {softwareIds.length === 0 ? (
                     <span className="text-slate-400">No licences</span>
                   ) : (
-                    <div className="flex flex-wrap gap-1.5">
-                      {names.slice(0, VISIBLE_CHIPS).map((name) => (
-                        <span key={name} className="rounded-md bg-slate-100 px-1.5 py-0.5 text-xs text-slate-700">
-                          {name}
-                        </span>
-                      ))}
-                      {names.length > VISIBLE_CHIPS && (
-                        <span className="px-1 py-0.5 text-xs text-slate-500" title={names.slice(VISIBLE_CHIPS).join(', ')}>
-                          +{names.length - VISIBLE_CHIPS} more
-                        </span>
-                      )}
+                    <div className="flex items-center gap-3">
+                      <SoftwareLogoStack softwareIds={softwareIds} max={VISIBLE_LOGOS} />
+                      <span className="whitespace-nowrap text-xs text-slate-500">
+                        {softwareIds.length} {softwareIds.length === 1 ? 'licence' : 'licences'}
+                      </span>
                     </div>
                   )}
                 </td>

@@ -8,7 +8,7 @@ export interface CatalogSpec {
   value: string;
 }
 
-/** Something a kit can contain, with its monthly lease price. */
+/** Something a kit can contain, priced both to lease and to buy outright. */
 export interface CatalogItem {
   id: string;
   kind: CatalogItemKind;
@@ -22,5 +22,8 @@ export interface CatalogItem {
   specs?: CatalogSpec[];
   /** Product image URL. Falls back to the kind icon when absent. */
   image?: string;
+  /** Monthly lease price, including support, warranty and returns. */
   monthlyPrice: number;
+  /** One-off price to buy outright (ex. VAT). */
+  purchasePrice: number;
 }

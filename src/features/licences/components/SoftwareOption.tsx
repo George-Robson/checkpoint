@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { cn } from '../../../lib/cn';
 import { formatCurrency } from '../../../lib/currency';
 import type { SoftwareProduct } from '../../../types/software';
+import { SoftwareLogo } from './SoftwareLogo';
 
 interface SoftwareOptionProps {
   product: SoftwareProduct;
@@ -28,18 +29,21 @@ export function SoftwareOption({ product, checked, onChange, disabled = false, b
         checked={checked}
         disabled={disabled}
         onChange={(event) => onChange(event.target.checked)}
-        className="mt-0.5 size-4 shrink-0 accent-indigo-600"
+        className="mt-2.5 size-4 shrink-0 accent-indigo-600"
       />
+      <SoftwareLogo product={product} />
       <span className="min-w-0 flex-1">
-        <span className="flex flex-wrap items-center gap-2">
+        <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
           <span className="text-sm font-medium text-slate-900">{product.name}</span>
           {badge}
         </span>
-        <span className="mt-0.5 block text-xs text-slate-500">{product.detail}</span>
-        {note && <span className="mt-1.5 block text-xs">{note}</span>}
+        <span className="block text-xs text-slate-500">
+          {product.vendor} · {product.detail}
+        </span>
+        {note && <span className="mt-1 block text-xs">{note}</span>}
       </span>
       <span className="shrink-0 text-xs tabular-nums text-slate-500">
-        {formatCurrency(product.monthlyPricePerSeat)}/mo
+        {product.monthlyPricePerSeat === 0 ? 'Included' : `${formatCurrency(product.monthlyPricePerSeat)}/mo`}
       </span>
     </label>
   );

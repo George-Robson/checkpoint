@@ -26,7 +26,7 @@ export function DeviceTable({ devices, sort, onSort, showTenant }: DeviceTablePr
             <th scope="col" className="whitespace-nowrap px-3 py-3 text-left text-xs font-medium text-slate-500 first:pl-4 last:pr-4">
               IP / MAC
             </th>
-            <SortableHeader label="Lease ends" sortKey="leaseEnd" sort={sort} onSort={onSort} />
+            <SortableHeader label="Lease / warranty ends" sortKey="leaseEnd" sort={sort} onSort={onSort} />
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-100">

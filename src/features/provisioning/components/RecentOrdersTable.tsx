@@ -1,4 +1,6 @@
-import { PackageOpen } from 'lucide-react';
+import { ArrowRight, PackageOpen } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { paths } from '../../../app/paths';
 import { Card } from '../../../components/ui/Card';
 import { CardHeader } from '../../../components/ui/CardHeader';
 import { EmptyState } from '../../../components/ui/EmptyState';
@@ -10,18 +12,20 @@ const HEADER_CELL = 'whitespace-nowrap px-3 py-3 text-left text-xs font-medium t
 
 interface RecentOrdersTableProps {
   orders: Order[];
+  /** Orders raised by onboarding, tracked on the Onboarding page instead. */
+  onboardingOrderCount: number;
   showTenant: boolean;
   highlightOrderId: string | null;
 }
 
-export function RecentOrdersTable({ orders, showTenant, highlightOrderId }: RecentOrdersTableProps) {
+export function RecentOrdersTable({ orders, onboardingOrderCount, showTenant, highlightOrderId }: RecentOrdersTableProps) {
   const { kits } = useKits();
   const kitById = new Map(kits.map((kit) => [kit.id, kit]));
   const inProgress = orders.filter((order) => order.status !== 'delivered').length;
 
   return (
     <Card className="overflow-hidden">
-      <CardHeader title="Recent orders" description={`${inProgress} in progress · ${orders.length} total`} />
+      <CardHeader title="Recent orders" description={`Hardware orders · ${inProgress} in progress · ${orders.length} total`} />
       {orders.length === 0 ? (
         <EmptyState icon={PackageOpen} title="No orders yet" description="Orders placed from the storefront appear here." />
       ) : (
@@ -66,6 +70,15 @@ export function RecentOrdersTable({ orders, showTenant, highlightOrderId }: Rece
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+      {onboardingOrderCount > 0 && (
+        <div className="border-t border-slate-200 px-4 py-3 text-sm text-slate-500">
+          {onboardingOrderCount} more {onboardingOrderCount === 1 ? 'order is' : 'orders are'} part of new-hire onboarding.{' '}
+          <Link to={paths.onboarding} className="inline-flex items-center gap-1 font-medium text-indigo-600 hover:text-indigo-700">
+            View in Onboarding
+            <ArrowRight aria-hidden="true" className="size-3.5" />
+          </Link>
         </div>
       )}
     </Card>

@@ -22,7 +22,7 @@ const TABLE_ID = 'fleet-device-table';
 
 export function FleetPage() {
   const { selectedTenant, isGlobalView } = useTenant();
-  const { filters, setCategory, setStatus, setType, setLeaseDue, setQuery, clearFilters, hasActiveFilters } =
+  const { filters, setCategory, setStatus, setType, setAcquisition, setLeaseDue, setQuery, clearFilters, hasActiveFilters } =
     useFleetFilters();
   const { devices, categoryCounts, totalInScope } = useFilteredDevices(filters);
   const { sortedDevices, sort, toggleSort } = useDeviceSort(devices);
@@ -71,6 +71,7 @@ export function FleetPage() {
           onQueryChange={setQuery}
           onStatusChange={setStatus}
           onTypeChange={setType}
+          onAcquisitionChange={setAcquisition}
           onLeaseDueChange={setLeaseDue}
           onClearFilters={clearFilters}
         />

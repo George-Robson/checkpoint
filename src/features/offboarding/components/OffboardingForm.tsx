@@ -3,7 +3,10 @@ import { Checkbox } from '../../../components/ui/Checkbox';
 import { FormField } from '../../../components/ui/FormField';
 import { Input } from '../../../components/ui/Input';
 import { RadioGroup } from '../../../components/ui/RadioGroup';
+import { formatCurrency } from '../../../lib/currency';
 import type { OffboardingRequest } from '../../../types/offboarding';
+import { useLicences } from '../../licences/hooks/useLicences';
+import { softwareMonthlyCost } from '../../licences/utils/softwareLookup';
 import { ACCOUNT_ACTION_META, ACCOUNT_ACTION_ORDER } from '../constants/accountActionMeta';
 import { DEVICE_ACTION_META } from '../constants/deviceActionMeta';
 import type { useOffboardingForm } from '../hooks/useOffboardingForm';
@@ -19,6 +22,10 @@ interface OffboardingFormProps {
 
 export function OffboardingForm({ employee, form, formId, onSubmitted }: OffboardingFormProps) {
   const { values, setField, setDeviceAction, setAccountAction, errors, today, wipeCount, returnCount, submit } = form;
+  const { assignments } = useLicences();
+  const heldSoftwareIds = assignments
+    .filter((assignment) => assignment.tenantId === employee.tenantId && assignment.person === employee.name)
+    .map((assignment) => assignment.softwareId);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -114,7 +121,14 @@ export function OffboardingForm({ employee, form, formId, onSubmitted }: Offboar
       )}
 
       <section className="space-y-4">
-        <h3 className="text-sm font-medium text-slate-900">Account & data</h3>
+        <div>
+          <h3 className="text-sm font-medium text-slate-900">Account & data</h3>
+          <p className="mt-1 text-sm text-slate-500">
+            {heldSoftwareIds.length > 0
+              ? `${employee.name} holds ${heldSoftwareIds.length} software licences (${formatCurrency(softwareMonthlyCost(heldSoftwareIds))}/mo).`
+              : `${employee.name} holds no software licences.`}
+          </p>
+        </div>
         {ACCOUNT_ACTION_ORDER.map((action) => {
           const meta = ACCOUNT_ACTION_META[action];
           return (

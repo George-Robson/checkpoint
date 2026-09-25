@@ -1,3 +1,4 @@
+import type { Acquisition } from '../../../types/acquisition';
 import type { Onboarding } from '../../../types/onboarding';
 import type { Order } from '../../../types/order';
 import type { ClientKit } from '../../kits/utils/isClientKit';
@@ -11,6 +12,7 @@ export interface StartOnboardingInput {
   /** null = no hardware (existing or personal device). */
   kit: ClientKit | null;
   shipTo: string;
+  acquisition: Acquisition;
   softwareIds: string[];
   requestedBy: string;
 }

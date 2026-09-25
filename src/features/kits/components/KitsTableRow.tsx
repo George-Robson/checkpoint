@@ -11,7 +11,7 @@ import { useSession } from '../../session/hooks/useSession';
 import { canEditKit } from '../../session/utils/permissions';
 import { getTenantName } from '../../tenants/utils/tenantLookup';
 import { describeContents } from '../utils/describeContents';
-import { kitMonthlyPrice } from '../utils/kitPricing';
+import { kitMonthlyPrice, kitPurchasePrice } from '../utils/kitPricing';
 import { KitIconBadge } from './KitIconBadge';
 
 const CELL = 'px-3 py-3 first:pl-4 last:pr-4';
@@ -69,6 +69,7 @@ export function KitsTableRow({ kit, templateName, showClient, showOrigin, isHigh
       <td className={cn(CELL, 'whitespace-nowrap text-right tabular-nums text-slate-900')}>
         {formatCurrency(kitMonthlyPrice(kit.lines))}
         <span className="text-slate-500"> /mo</span>
+        <p className="text-xs text-slate-500">{formatCurrency(kitPurchasePrice(kit.lines))} to buy</p>
       </td>
       <td className={CELL}>
         <time dateTime={kit.updatedAt} title={formatDateTime(kit.updatedAt)} className="whitespace-nowrap text-slate-700">

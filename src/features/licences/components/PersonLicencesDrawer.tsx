@@ -6,12 +6,13 @@ import { Select } from '../../../components/ui/Select';
 import { formatCurrency } from '../../../lib/currency';
 import { formatDate } from '../../../lib/date';
 import { useSession } from '../../session/hooks/useSession';
-import { getTenant, getTenantName } from '../../tenants/utils/tenantLookup';
+import { getTenantName } from '../../tenants/utils/tenantLookup';
 import { useLicences } from '../hooks/useLicences';
 import { useSeatAvailability } from '../hooks/useSeatAvailability';
 import type { LicensedPerson } from '../types/licensedPerson';
 import { describeLicenceChange } from '../utils/describeLicenceChange';
 import { softwareMonthlyCost } from '../utils/softwareLookup';
+import { BundlePicker } from './BundlePicker';
 import { SoftwarePicker } from './SoftwarePicker';
 
 interface PersonLicencesDrawerProps {
@@ -25,13 +26,13 @@ interface PersonLicencesDrawerProps {
 /** Add or remove licences for an existing person (or a new hire before they start). */
 export function PersonLicencesDrawer({ people, personKey, onClose, onSaved }: PersonLicencesDrawerProps) {
   const { currentUser } = useSession();
-  const { changeLicences } = useLicences();
+  const { changeLicences, baselines, bundles } = useLicences();
   const [selectedKey, setSelectedKey] = useState(personKey ?? '');
   const person = people.find((candidate) => candidate.key === selectedKey) ?? null;
   const heldIds = person?.assignments.map((assignment) => assignment.softwareId) ?? [];
   const [selectedIds, setSelectedIds] = useState<string[]>(heldIds);
   const availability = useSeatAvailability(person?.tenantId ?? null);
-  const baselineIds = person ? (getTenant(person.tenantId)?.baselineSoftwareIds ?? []) : [];
+  const baselineIds = person ? (baselines[person.tenantId] ?? []) : [];
 
   const add = selectedIds.filter((id) => !heldIds.includes(id));
   const remove = heldIds.filter((id) => !selectedIds.includes(id));
@@ -43,7 +44,13 @@ export function PersonLicencesDrawer({ people, personKey, onClose, onSaved }: Pe
   }
 
   function toggle(softwareId: string, included: boolean) {
-    setSelectedIds((previous) => (included ? [...previous, softwareId] : previous.filter((id) => id !== softwareId)));
+    toggleMany([softwareId], included);
+  }
+
+  function toggleMany(softwareIds: string[], included: boolean) {
+    setSelectedIds((previous) =>
+      included ? [...new Set([...previous, ...softwareIds])] : previous.filter((id) => !softwareIds.includes(id)),
+    );
   }
 
   function save() {
@@ -109,6 +116,14 @@ export function PersonLicencesDrawer({ people, personKey, onClose, onSaved }: Pe
               </Select>
             )}
           </FormField>
+        )}
+
+        {person && (
+          <BundlePicker
+            bundles={bundles.filter((bundle) => bundle.tenantId === person.tenantId)}
+            selectedIds={selectedIds}
+            onToggle={(bundle, included) => toggleMany(bundle.softwareIds, included)}
+          />
         )}
 
         {person && (

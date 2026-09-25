@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { DEVICE_CATEGORY_ORDER } from '../../../constants/deviceCategory';
 import { getNow } from '../../../lib/date';
-import { isDueForRefresh } from '../../../lib/lease';
+import { isDueForRefresh } from '../../../lib/deviceTerm';
 import type { Device } from '../../../types/device';
 import { useDevices } from '../../devices/hooks/useDevices';
 import { useTenantScoped } from '../../tenants/hooks/useTenantScoped';
@@ -28,6 +28,7 @@ export function useFilteredDevices(filters: FleetFilters): FilteredDevices {
       (device) =>
         (filters.status === 'all' || device.status === filters.status) &&
         (filters.type === 'all' || device.type === filters.type) &&
+        (filters.acquisition === 'all' || device.acquisition === filters.acquisition) &&
         (!filters.leaseDue || isDueForRefresh(device, now)) &&
         matchesSearch(device, normalizedQuery),
     );

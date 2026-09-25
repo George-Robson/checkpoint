@@ -2,9 +2,11 @@ import {
   Briefcase,
   ChartCandlestick,
   Code,
+  Gamepad2,
   Headset,
   Network,
   Package,
+  Palette,
   ScanBarcode,
   Stethoscope,
   Truck,
@@ -22,6 +24,8 @@ export const KIT_ICON_ORDER: KitIconKey[] = [
   'scan',
   'stethoscope',
   'truck',
+  'palette',
+  'gamepad',
 ];
 
 export const KIT_ICONS: Record<KitIconKey, { label: string; icon: LucideIcon }> = {
@@ -34,4 +38,6 @@ export const KIT_ICONS: Record<KitIconKey, { label: string; icon: LucideIcon }> 
   scan: { label: 'Warehouse', icon: ScanBarcode },
   stethoscope: { label: 'Clinical', icon: Stethoscope },
   truck: { label: 'Logistics', icon: Truck },
+  palette: { label: 'Art & design', icon: Palette },
+  gamepad: { label: 'Games & QA', icon: Gamepad2 },
 };

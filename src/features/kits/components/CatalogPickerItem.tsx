@@ -53,6 +53,7 @@ export function CatalogPickerItem({ item, selected, inKit, onToggle }: CatalogPi
             <span className="shrink-0 text-right">
               <span className="text-sm font-medium tabular-nums text-slate-900">{formatCurrency(item.monthlyPrice)}</span>
               <span className="text-xs text-slate-500"> /mo</span>
+              <span className="block text-xs tabular-nums text-slate-500">or {formatCurrency(item.purchasePrice)} to buy</span>
             </span>
           </span>
           {specs.length > 0 && (

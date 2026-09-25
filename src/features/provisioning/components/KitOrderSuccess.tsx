@@ -1,11 +1,12 @@
 import { CircleCheck } from 'lucide-react';
-import { formatCurrency } from '../../../lib/currency';
 import { formatDate } from '../../../lib/date';
 import type { Kit } from '../../../types/kit';
 import type { Order } from '../../../types/order';
-import { kitMonthlyPrice } from '../../kits/utils/kitPricing';
+import { kitCost } from '../../kits/utils/kitPricing';
+import { ACQUISITION_META } from '../../orders/constants/acquisitionMeta';
+import { describeKitCost } from '../../orders/utils/describeKitCost';
 import { getTenantName } from '../../tenants/utils/tenantLookup';
-import { OrderStatusBadge } from './OrderStatusBadge';
+import { OrderStatusBadge } from '../../orders/components/OrderStatusBadge';
 
 interface KitOrderSuccessProps {
   kit: Kit;
@@ -22,7 +23,8 @@ export function KitOrderSuccess({ kit, order }: KitOrderSuccessProps) {
     ...(isSiteKit ? [] : [{ label: 'Deliver to', value: order.shipTo ?? '—' }]),
     { label: isSiteKit ? 'Go-live date' : 'Needed by', value: order.startDate ? formatDate(order.startDate) : '—' },
     { label: 'Expected delivery', value: order.expectedDelivery ? formatDate(order.expectedDelivery) : '—' },
-    { label: 'Monthly cost', value: `${formatCurrency(kitMonthlyPrice(kit.lines))} / month` },
+    { label: 'Payment', value: ACQUISITION_META[order.acquisition].label },
+    { label: 'Cost', value: describeKitCost(kitCost(kit.lines, order.acquisition)) },
   ];
 
   const nextSteps = isSiteKit

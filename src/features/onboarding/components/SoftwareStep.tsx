@@ -1,6 +1,8 @@
 import { Card } from '../../../components/ui/Card';
 import { CardHeader } from '../../../components/ui/CardHeader';
+import { BundlePicker } from '../../licences/components/BundlePicker';
 import { SoftwarePicker } from '../../licences/components/SoftwarePicker';
+import { useLicences } from '../../licences/hooks/useLicences';
 import type { OnboardingWizard } from '../hooks/useOnboardingWizard';
 
 interface SoftwareStepProps {
@@ -8,7 +10,9 @@ interface SoftwareStepProps {
 }
 
 export function SoftwareStep({ wizard }: SoftwareStepProps) {
-  const { tenant, selectedKit, baselineIds, softwareIds, availability, toggleSoftware } = wizard;
+  const { draft, tenant, selectedKit, baselineIds, softwareIds, availability, toggleSoftware, toggleSoftwareMany } = wizard;
+  const { bundles } = useLicences();
+  const tenantBundles = bundles.filter((bundle) => bundle.tenantId === draft.tenantId);
 
   return (
     <Card>
@@ -22,7 +26,12 @@ export function SoftwareStep({ wizard }: SoftwareStepProps) {
           </>
         }
       />
-      <div className="p-4">
+      <div className="space-y-6 p-4">
+        <BundlePicker
+          bundles={tenantBundles}
+          selectedIds={softwareIds}
+          onToggle={(bundle, included) => toggleSoftwareMany(bundle.softwareIds, included)}
+        />
         <SoftwarePicker
           selectedIds={softwareIds}
           onToggle={toggleSoftware}

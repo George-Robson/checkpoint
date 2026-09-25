@@ -117,6 +117,7 @@ export function KitBuilder({ initialDraft, kitId, readOnly }: KitBuilderProps) {
             selectedIds={draft.recommendedSoftwareIds}
             onToggle={toggleRecommendedSoftware}
             disabled={draft.assignmentTarget === 'site'}
+            ownerTenantId={draft.ownerTenantId}
           />
         </fieldset>
 

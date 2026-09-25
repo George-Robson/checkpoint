@@ -4,6 +4,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { paths } from '../../app/paths';
 import { Button } from '../../components/ui/Button';
 import { PageHeader } from '../../components/ui/PageHeader';
+import { AccountRestrictedNotice } from '../billing/components/AccountRestrictedNotice';
+import { useAccountStanding } from '../billing/hooks/useAccountStanding';
 import { HardwareStep } from './components/HardwareStep';
 import { OnboardingSummaryPanel } from './components/OnboardingSummaryPanel';
 import { PersonStep } from './components/PersonStep';
@@ -18,6 +20,8 @@ export function OnboardingWizardPage() {
   const wizard = useOnboardingWizard();
   const stepRef = useRef<HTMLDivElement>(null);
   const isReview = wizard.step === 'review';
+  const standing = useAccountStanding(wizard.draft.tenantId);
+  const restricted = standing?.restricted ?? false;
 
   // Each step starts at the top; the app's main pane is the scroll container.
   useEffect(() => {
@@ -52,6 +56,10 @@ export function OnboardingWizardPage() {
         description="Choose their hardware and software in one go. The kit ships before their first day and licences activate on it."
       />
 
+      {standing && restricted && (
+        <AccountRestrictedNotice standing={standing} clientName={wizard.tenant?.name ?? 'this client'} action="New onboardings" />
+      )}
+
       <WizardStepper currentIndex={wizard.stepIndex} onSelect={wizard.goTo} />
 
       <div className="grid gap-6 lg:grid-cols-3 [&>*]:min-w-0">
@@ -73,7 +81,9 @@ export function OnboardingWizardPage() {
               </Link>
             )}
             {isReview ? (
-              <Button onClick={handleSubmit}>Start onboarding</Button>
+              <Button onClick={handleSubmit} disabled={restricted}>
+                Start onboarding
+              </Button>
             ) : (
               <Button onClick={handleNext}>
                 Continue

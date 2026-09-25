@@ -5,13 +5,20 @@ import { SearchInput } from '../../../components/ui/SearchInput';
 import { ToggleChip } from '../../../components/ui/ToggleChip';
 import { DEVICE_STATUS_META, DEVICE_STATUS_ORDER } from '../../../constants/deviceStatus';
 import { REFRESH_WINDOW_DAYS } from '../../../data/mockData';
+import type { Acquisition } from '../../../types/acquisition';
 import type { DeviceStatus, DeviceType } from '../../../types/device';
 import { DEVICE_TYPE_META, DEVICE_TYPE_ORDER } from '../../../constants/deviceType';
+import { ACQUISITION_META, ACQUISITION_ORDER } from '../../orders/constants/acquisitionMeta';
 import type { FleetFilters } from '../types/fleetFilters';
 
 const STATUS_OPTIONS: FilterSelectOption<DeviceStatus | 'all'>[] = [
   { value: 'all', label: 'All statuses' },
   ...DEVICE_STATUS_ORDER.map((status) => ({ value: status, label: DEVICE_STATUS_META[status].label })),
+];
+
+const ACQUISITION_OPTIONS: FilterSelectOption<Acquisition | 'all'>[] = [
+  { value: 'all', label: 'Leased & owned' },
+  ...ACQUISITION_ORDER.map((acquisition) => ({ value: acquisition, label: ACQUISITION_META[acquisition].ownership })),
 ];
 
 interface FleetToolbarProps {
@@ -23,6 +30,7 @@ interface FleetToolbarProps {
   onQueryChange: (query: string) => void;
   onStatusChange: (status: DeviceStatus | 'all') => void;
   onTypeChange: (type: DeviceType | 'all') => void;
+  onAcquisitionChange: (acquisition: Acquisition | 'all') => void;
   onLeaseDueChange: (leaseDue: boolean) => void;
   onClearFilters: () => void;
 }
@@ -35,6 +43,7 @@ export function FleetToolbar({
   onQueryChange,
   onStatusChange,
   onTypeChange,
+  onAcquisitionChange,
   onLeaseDueChange,
   onClearFilters,
 }: FleetToolbarProps) {
@@ -69,13 +78,20 @@ export function FleetToolbar({
         onChange={onTypeChange}
         active={filters.type !== 'all'}
       />
+      <FilterSelect
+        label="Filter by ownership"
+        value={filters.acquisition}
+        options={ACQUISITION_OPTIONS}
+        onChange={onAcquisitionChange}
+        active={filters.acquisition !== 'all'}
+      />
       <ToggleChip
         pressed={filters.leaseDue}
         onPressedChange={onLeaseDueChange}
         icon={RefreshCw}
       >
         Due for refresh
-        <span className="sr-only"> (lease ends within {REFRESH_WINDOW_DAYS} days)</span>
+        <span className="sr-only"> (lease or warranty ends within {REFRESH_WINDOW_DAYS} days)</span>
       </ToggleChip>
       {hasActiveFilters && (
         <Button variant="ghost" size="sm" onClick={onClearFilters}>

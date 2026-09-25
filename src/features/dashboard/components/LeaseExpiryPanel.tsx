@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Card } from '../../../components/ui/Card';
 import { CardHeader } from '../../../components/ui/CardHeader';
 import { ChartLegend } from '../../../components/ui/ChartLegend';
-import { LEASE_TERM_MONTHS, REFRESH_WINDOW_DAYS } from '../../../data/mockData';
+import { REFRESH_WINDOW_DAYS } from '../../../data/mockData';
 import { cn } from '../../../lib/cn';
 import { CHART_THEME } from '../constants/chartTheme';
 import { useLeaseExpiryTimeline } from '../hooks/useLeaseExpiryTimeline';
@@ -29,7 +29,7 @@ export function LeaseExpiryPanel({ className }: LeaseExpiryPanelProps) {
     <Card className={cn('flex flex-col', className)}>
       <CardHeader
         title="Lease expiries"
-        description={`${totalEnding} ${LEASE_TERM_MONTHS}-month leases end in the next 12 months`}
+        description={`${totalEnding} leases and warranties end in the next 12 months`}
         actions={<ChartViewToggle value={view} onChange={setView} />}
       />
       <div className="flex-1 p-4">

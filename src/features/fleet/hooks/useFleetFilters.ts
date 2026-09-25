@@ -4,6 +4,8 @@ import { DEVICE_CATEGORY_ORDER } from '../../../constants/deviceCategory';
 import { DEVICE_STATUS_ORDER } from '../../../constants/deviceStatus';
 import type { DeviceStatus, DeviceType } from '../../../types/device';
 import { DEVICE_TYPE_ORDER } from '../../../constants/deviceType';
+import type { Acquisition } from '../../../types/acquisition';
+import { ACQUISITION_ORDER } from '../../orders/constants/acquisitionMeta';
 import type { FleetCategoryFilter, FleetFilters } from '../types/fleetFilters';
 
 /** Query-string keys. `lease=due` and `status=…` are also linked to from the dashboard. */
@@ -11,6 +13,7 @@ const PARAM = {
   category: 'category',
   status: 'status',
   type: 'type',
+  acquisition: 'ownership',
   lease: 'lease',
   query: 'q',
 } as const;
@@ -27,6 +30,7 @@ export function useFleetFilters() {
       category: parseOption(searchParams.get(PARAM.category), DEVICE_CATEGORY_ORDER),
       status: parseOption(searchParams.get(PARAM.status), DEVICE_STATUS_ORDER),
       type: parseOption(searchParams.get(PARAM.type), DEVICE_TYPE_ORDER),
+      acquisition: parseOption(searchParams.get(PARAM.acquisition), ACQUISITION_ORDER),
       leaseDue: searchParams.get(PARAM.lease) === 'due',
       query: searchParams.get(PARAM.query) ?? '',
     }),
@@ -68,18 +72,37 @@ export function useFleetFilters() {
     [updateParams],
   );
 
+  const setAcquisition = useCallback(
+    (acquisition: Acquisition | 'all') => updateParams({ acquisition: acquisition === 'all' ? null : acquisition }),
+    [updateParams],
+  );
+
   const setLeaseDue = useCallback((leaseDue: boolean) => updateParams({ lease: leaseDue ? 'due' : null }), [updateParams]);
 
   const setQuery = useCallback((query: string) => updateParams({ query }), [updateParams]);
 
   /** Clears everything except the category tab. */
   const clearFilters = useCallback(
-    () => updateParams({ status: null, type: null, lease: null, query: null }),
+    () => updateParams({ status: null, type: null, acquisition: null, lease: null, query: null }),
     [updateParams],
   );
 
   const hasActiveFilters =
-    filters.status !== 'all' || filters.type !== 'all' || filters.leaseDue || filters.query.trim() !== '';
+    filters.status !== 'all' ||
+    filters.type !== 'all' ||
+    filters.acquisition !== 'all' ||
+    filters.leaseDue ||
+    filters.query.trim() !== '';
 
-  return { filters, setCategory, setStatus, setType, setLeaseDue, setQuery, clearFilters, hasActiveFilters };
+  return {
+    filters,
+    setCategory,
+    setStatus,
+    setType,
+    setAcquisition,
+    setLeaseDue,
+    setQuery,
+    clearFilters,
+    hasActiveFilters,
+  };
 }

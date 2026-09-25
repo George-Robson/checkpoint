@@ -28,6 +28,8 @@ export interface OffboardingRequest {
   accountActions: AccountAction[];
   deviceActions: OffboardingDeviceAction[];
   status: OffboardingStatus;
+  /** When the leaver's software licences are released (null if they're kept). */
+  licencesEndOn: string | null;
   requestedBy: string;
   createdAt: string;
 }
